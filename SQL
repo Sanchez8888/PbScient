@@ -8,8 +8,11 @@ CREATE TABLE IF NOT EXISTS Cuisinier(
     nom VARCHAR(50),
     prenom VARCHAR(50),
     adresse VARCHAR(50),
+    code_postal VARCHAR(5),
+    ville VARCHAR(50),
     téléphone INTEGER,
     mail VARCHAR(50),
+    motdepasse VARCHAR(50),
     radié BOOL
 );
 DROP TABLE IF EXISTS Plat;
@@ -21,8 +24,9 @@ CREATE TABLE IF NOT EXISTS Plat(
     prix DOUBLE,
     date_fabrication DATE,
     date_expiration DATE,
+    régime VARCHAR(50),
     origine VARCHAR(50),
-    ingrédients VARCHAR(50)
+    ingrédients TEXT
 );
 DROP TABLE IF EXISTS Client;
 CREATE TABLE IF NOT EXISTS Client(
@@ -30,6 +34,8 @@ CREATE TABLE IF NOT EXISTS Client(
     nom VARCHAR(50),
     prenom VARCHAR(50),
     adresse VARCHAR(50),
+    code_postal VARCHAR(5),
+    ville VARCHAR(50),
     téléphone VARCHAR(10),
     mail VARCHAR(100),
     motdepasse VARCHAR(50),
@@ -101,5 +107,21 @@ CREATE TABLE IF NOT EXISTS note(
    FOREIGN KEY(id_client) REFERENCES Client(id_client),
    FOREIGN KEY(id_cuisinier) REFERENCES Cuisinier(id_cuisinier)
 );
+DROP TABLE IF EXISTS informe_de_la_demande;
+CREATE TABLE IF NOT EXISTS informe_de_la_demande(
+   id_cuisinier VARCHAR(50),
+   id_commande VARCHAR(50),
+   PRIMARY KEY(id_cuisinier, id_commande),
+   FOREIGN KEY(id_cuisinier) REFERENCES Cuisinier(id_cuisinier),
+   FOREIGN KEY(id_commande) REFERENCES Commandes(id_commande)
+);
+
+SHOW TABLES;
+
+SELECT * FROM CLIENT;
+
+SELECT nom
+FROM Client
+WHERE Trim(ville) = 'Paris';
 
     
