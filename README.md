@@ -1,4 +1,3 @@
-#SQL
 DROP DATABASE IF EXISTS site;
 CREATE DATABASE site;
 USE site;
@@ -16,21 +15,23 @@ CREATE TABLE IF NOT EXISTS Cuisinier(
 DROP TABLE IF EXISTS Plat;
 CREATE TABLE IF NOT EXISTS Plat(
 	nom_plat VARCHAR(50) PRIMARY KEY,
+    id_cuisinier VARCHAR(50),
     nb_personnes INTEGER,
-    origine VARCHAR(50),
     type_plat VARCHAR(50),
     prix DOUBLE,
     date_fabrication DATE,
     date_expiration DATE,
+    origine VARCHAR(50),
     ingrédients VARCHAR(50)
 );
 DROP TABLE IF EXISTS Client;
 CREATE TABLE IF NOT EXISTS Client(
 	id_client VARCHAR(50) PRIMARY KEY,
-    mail VARCHAR(50),
     nom VARCHAR(50),
     prenom VARCHAR(50),
     adresse VARCHAR(50),
+    téléphone VARCHAR(10),
+    mail VARCHAR(100),
     motdepasse VARCHAR(50),
     radié BOOL
 );
@@ -43,7 +44,7 @@ CREATE TABLE IF NOT EXISTS Historique(
 DROP TABLE IF EXISTS Commandes;
 CREATE TABLE IF NOT EXISTS Commandes(
 	id_commande VARCHAR(50) PRIMARY KEY,
-    id_cuisinier VARCHAR(50),
+    id_clients VARCHAR(50),
     nom_plat VARCHAR(50),
     prix DOUBLE,
     date_commande VARCHAR(50),
