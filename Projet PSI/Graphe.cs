@@ -106,16 +106,17 @@ namespace ProjetPSI
 
             List<int> file = new List<int>();
             List<int> visites = new List<int>();
+    
             file.Add(depart);
             visites.Add(depart);
-
+        
             while (file.Count > 0)
             {
                 int noeud = file[0];
                 file.RemoveAt(0);
                 Console.Write(noeud + " ");
-
-                foreach (Lien lien in adjacence[noeud].OrderBy(l => l.Noeud1 == noeud ? l.Noeud2 : l.Noeud1))
+        
+                foreach (Lien lien in adjacence[noeud])
                 {
                     int voisin = (lien.Noeud1 == noeud) ? lien.Noeud2 : lien.Noeud1;
                     if (!visites.Contains(voisin))
@@ -127,7 +128,7 @@ namespace ProjetPSI
             }
             Console.WriteLine();
         }
-
+        
         /// <summary>
         /// Parcours en profondeur
         /// </summary>
@@ -135,20 +136,20 @@ namespace ProjetPSI
         public void ParcoursProfondeur(int depart)
         {
             if (!adjacence.ContainsKey(depart)) return;
-
+        
             List<int> visites = new List<int>();
             ParcoursProfondeurRecursive(depart, visites);
             Console.WriteLine();
         }
-
+        
         private void ParcoursProfondeurRecursive(int noeud, List<int> visites)
         {
             if (visites.Contains(noeud)) return;
-
+        
             visites.Add(noeud);
             Console.Write(noeud + " ");
-
-            foreach (Lien lien in adjacence[noeud].OrderBy(l => l.Noeud1 == noeud ? l.Noeud2 : l.Noeud1))
+        
+            foreach (Lien lien in adjacence[noeud])
             {
                 int voisin = (lien.Noeud1 == noeud) ? lien.Noeud2 : lien.Noeud1;
                 ParcoursProfondeurRecursive(voisin, visites);
