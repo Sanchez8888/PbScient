@@ -1,0 +1,17 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Projet_PSI; 
+using System;
+namespace TestProject1
+{
+    [TestClass]
+    public class UnitTest1
+    {
+        [TestMethod]
+        public void TestMethod1()
+        {
+            Graphe graphe = new Graphe("soc-karate.txt");
+            bool estConnexe = graphe.Connexe();
+            Assert.IsTrue(estConnexe, "Le graphe est connexe");
+        }
+    }
+}
