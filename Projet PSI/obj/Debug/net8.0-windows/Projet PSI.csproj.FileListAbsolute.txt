@@ -1,0 +1,14 @@
+C:\Users\adams\source\repos\Projet PSI\bin\Debug\net8.0-windows\Projet PSI.exe
+C:\Users\adams\source\repos\Projet PSI\bin\Debug\net8.0-windows\Projet PSI.deps.json
+C:\Users\adams\source\repos\Projet PSI\bin\Debug\net8.0-windows\Projet PSI.runtimeconfig.json
+C:\Users\adams\source\repos\Projet PSI\bin\Debug\net8.0-windows\Projet PSI.dll
+C:\Users\adams\source\repos\Projet PSI\bin\Debug\net8.0-windows\Projet PSI.pdb
+C:\Users\adams\source\repos\Projet PSI\obj\Debug\net8.0-windows\Projet PSI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\adams\source\repos\Projet PSI\obj\Debug\net8.0-windows\Projet PSI.AssemblyInfoInputs.cache
+C:\Users\adams\source\repos\Projet PSI\obj\Debug\net8.0-windows\Projet PSI.AssemblyInfo.cs
+C:\Users\adams\source\repos\Projet PSI\obj\Debug\net8.0-windows\Projet PSI.csproj.CoreCompileInputs.cache
+C:\Users\adams\source\repos\Projet PSI\obj\Debug\net8.0-windows\Projet PSI.dll
+C:\Users\adams\source\repos\Projet PSI\obj\Debug\net8.0-windows\refint\Projet PSI.dll
+C:\Users\adams\source\repos\Projet PSI\obj\Debug\net8.0-windows\Projet PSI.pdb
+C:\Users\adams\source\repos\Projet PSI\obj\Debug\net8.0-windows\Projet PSI.genruntimeconfig.cache
+C:\Users\adams\source\repos\Projet PSI\obj\Debug\net8.0-windows\ref\Projet PSI.dll
