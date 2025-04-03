@@ -1,18 +1,94 @@
--- (1) insertion des données dans la table Client
+-- (11) insertion des données dans la table Client
 INSERT INTO `site`.`Client` (`id_client`, `nom`, `prenom`, `adresse`,`code_postal`,`ville`, `téléphone`,`mail`, `motdepasse`,`radié`) VALUES ('1', 'Durand', 'Medhy','15','75017','Paris', '1234567890', 'Mdurand@gmail.com','1234',False);
+INSERT INTO `site`.`Client` (`id_client`, `nom`, `prenom`, `adresse`,`code_postal`,`ville`, `téléphone`,`mail`, `motdepasse`,`radié`) VALUES
+('2', 'Martin', 'Sophie', '12 Rue Lafayette', 75009, 'Paris', '0612345678', 'smartin@gmail.com', 'pass123', False),
+('3', 'Bernard', 'Luc', '22 Avenue Foch', 75016, 'Paris', '0623456789', 'lbernard@gmail.com', 'qwerty', False),
+('4', 'Dubois', 'Emma', '8 Boulevard Haussmann', 75008, 'Paris', '0634567890', 'edubois@gmail.com', 'azerty', False),
+('5', 'Thomas', 'Louis', '18 Rue Oberkampf', 75011, 'Paris', '0645678901', 'lthomas@gmail.com', 'password', True),
+('6', 'Robert', 'Alice', '24 Rue de la Paix', 75002, 'Paris', '0656789012', 'arobert@gmail.com', 'alice123', False),
+('7', 'Petit', 'Hugo', '36 Avenue des Champs', 75008, 'Paris', '0667890123', 'hpetit@gmail.com', 'hugo123', False),
+('8', 'Richard', 'Camille', '48 Rue Saint-Denis', 75001, 'Paris', '0678901234', 'crichard@gmail.com', 'camillepass', False),
+('9', 'Durant', 'Paul', '72 Boulevard Voltaire', 75011, 'Paris', '0689012345', 'pdurant@gmail.com', 'paulpass', True),
+('C5', 'Lefevre', 'Manon', '10 Boulevard Saint-Michel', 75005, 'Paris', '0745678901', 'mlefevre@gmail.com', 'chefpass4', False);
 
--- (1) insertion des données dans la table Cuisinier
-INSERT INTO `site`.`Cuisinier` (`id_cuisinier`, `nom`, `prenom`, `adresse`,`code_postal`,`ville`, `téléphone`,`mail`, `motdepasse`,`radié`) VALUES ('1', 'Dupond', 'Marie','30 Rue de la République', '75011','Paris', '1234567890', 'Mdupond@gmail.com','4321',False);
+-- (5) insertion des données dans la table Cuisinier
+INSERT INTO `site`.`Cuisinier` (`id_cuisinier`, `nom`, `prenom`, `adresse`,`code_postal`,`ville`, `téléphone`,`mail`, `motdepasse`,`radié`) VALUES ('C1', 'Dupond', 'Marie','30 Rue de la République', '75011','Paris', '1234567890', 'Mdupond@gmail.com','4321',False);
+INSERT INTO `site`.`Cuisinier` (`id_cuisinier`, `nom`, `prenom`, `adresse`,`code_postal`,`ville`, `téléphone`,`mail`, `motdepasse`,`radié`) VALUES
+('C2', 'Garcia', 'Pierre', '3 Rue de Lyon', 75012, 'Paris', '0712345678', 'pgarcia@gmail.com', 'chefpass1', False),
+('C3', 'Morel', 'Clara', '5 Avenue de la Gare', 75010, 'Paris', '0723456789', 'cmorel@gmail.com', 'chefpass2', False),
+('C4', 'Fournier', 'Antoine', '8 Rue Rivoli', 75004, 'Paris', '0734567890', 'afournier@gmail.com', 'chefpass3', False),
+('C5', 'Lefevre', 'Manon', '10 Boulevard Saint-Michel', 75005, 'Paris', '0745678901', 'mlefevre@gmail.com', 'chefpass4', False);
 
--- (2) insertion des données dans la table Plat
+-- (7) insertion des données dans la table Plat
 INSERT INTO `site`.`Plat` (`nom_plat`,`id_cuisinier`,`nb_personnes`, `type_plat`, `prix`, `date_fabrication`,`date_expiration`,`régime`,`origine`) VALUES ('Raclette','1','6','Plat','10','2025-01-10','2025-01-15',NULL,'Française');
 INSERT INTO `site`.`Plat` (`nom_plat`,`id_cuisinier`,`nb_personnes`, `type_plat`, `prix`, `date_fabrication`,`date_expiration`,`régime`,`origine`) VALUES ('Salade de fruit','1','6','Desser','5','2025-01-10','2025-01-15','Végétarien','Indifférent');
+INSERT INTO `site`.`Plat` (`nom_plat`,`id_cuisinier`,`nb_personnes`, `type_plat`, `prix`, `date_fabrication`,`date_expiration`,`régime`,`origine`) VALUES
+('Tartiflette', 'C2', 4, 'Plat', 12.5, '2025-02-01', '2025-02-07', NULL, 'Française'),
+('Pâtes Carbonara', 'C3', 2, 'Plat', 9.99, '2025-02-02', '2025-02-05', NULL, 'Italienne'),
+('Couscous', 'C4', 6, 'Plat', 15.0, '2025-02-03', '2025-02-08', NULL, 'Maghrébine'),
+('Soupe Miso', 'C5', 1, 'Entrée', 5.5, '2025-02-04', '2025-02-06', 'Végétarien', 'Japonaise'),
+('Tiramisu', 'C3', 4, 'Dessert', 6.5, '2025-02-05', '2025-02-10', NULL, 'Italienne');
 
--- (2) insertion des données dans la table Ligne_de_commande
-INSERT INTO `site`.`Ligne_de_commande` (`iDcommande`, `adresse_livraison`, `dateC`) VALUES ('1', '15 Rue de Paris, 75017 Paris', '2025-01-05');
-INSERT INTO `site`.`Ligne_de_commande` (`iDcommande`, `adresse_livraison`, `dateC`) VALUES ('2', '15 Rue de Paris, 75017 Paris', '2025-01-06');
+-- () insertion des données dans la table Ligne_de_commande
+INSERT INTO `site`.`Ligne_de_commande` (`id_commande`, `adresse_livraison`, `dateC`) VALUES ('COM1', '15 Rue de Paris, 75017 Paris', '2025-01-05');
+INSERT INTO `site`.`Ligne_de_commande` (`id_commande`, `adresse_livraison`, `dateC`) VALUES ('COM2', '15 Rue de Paris, 75017 Paris', '2025-01-06');
+INSERT INTO `site`.`Ligne_de_commande` (`id_commande`, `adresse_livraison`, `dateC`) VALUES
+('COM3', '10 Rue Lafayette, 75009 Paris', '2025-02-01'),
+('COM4', '22 Avenue Foch, 75016 Paris', '2025-02-02'),
+('COM5', '8 Boulevard Haussmann, 75008 Paris', '2025-02-03');
 
--- (2) insertion des données dans la table Commandes
-INSERT INTO `site`.`Commandes` (`id_commande`,`id_client`,`nom_plat`, `prix`, `date_commande`, `id_client_1`,`iDcommande`) VALUES ('1', '1', 'Raclette','10',NULL,'1','1');
-INSERT INTO `site`.`Commandes` (`id_commande`,`id_client`,`nom_plat`, `prix`, `date_commande`, `id_client_1`,`iDcommande`) VALUES ('2', '1', 'Salade de fruit','5',NULL,'1','2');
+-- (5) insertion des données dans la table Commandes
+INSERT INTO `site`.`Commandes` (`id_commande`,`id_client`,`nom_plat`, `prix`, `date_commande`) VALUES ('COM1', '1', 'Raclette','10',NULL);
+INSERT INTO `site`.`Commandes` (`id_commande`,`id_client`,`nom_plat`, `prix`, `date_commande`) VALUES ('COM2', '1', 'Salade de fruit','5',NULL);
+INSERT INTO `site`.`Commandes` (`id_commande`,`id_client`,`nom_plat`, `prix`, `date_commande`) VALUES
+('COM3', '2', 'Tartiflette', '12.5', '2025-02-01'),
+('COM4', '3', 'Pâtes Carbonara', '9.99', '2025-02-02'),
+('COM5', '4', 'Couscous', '15.0', '2025-02-03');
 
+-- (5) insertion des données dans la table prépare
+INSERT INTO `site`.`prépare` (`nom_plat`, `id_cuisinier`) VALUES
+('Tartiflette', 'C2'),
+('Pâtes Carbonara', 'C3'),
+('Couscous', 'C4'),
+('Soupe Miso', 'C5'),
+('Tiramisu', 'C3');
+
+-- (3) insertion des données dans la table note
+INSERT INTO `site`.`note` (`id_client`, `id_cuisinier`, `commente`, `date_d_échange`) VALUES
+('2', 'C2', 'Très bon plat !', '2025-02-02'),
+('3', 'C3', 'Délicieux, je recommande.', '2025-02-03'),
+('4', 'C4', 'Un peu épicé pour moi.', '2025-02-04');
+
+-- (5) insertion des données dans la table ingrédient
+INSERT INTO `site`.`ingrédient` (`nomIng`, `volume`) VALUES
+('Pommes de terre', 500),
+('Fromage Reblochon', 200),
+('Pâtes', 300),
+('Crème fraîche', 150),
+('Tofu', 100);
+
+-- (5) insertion des données dans la table inclus
+INSERT INTO `site`.`inclus` (`nom_plat`, `nomIng`) VALUES
+('Tartiflette', 'Pommes de terre'),
+('Tartiflette', 'Fromage Reblochon'),
+('Pâtes Carbonara', 'Pâtes'),
+('Pâtes Carbonara', 'Crème fraîche'),
+('Soupe Miso', 'Tofu');
+
+-- (3) insertion des données dans la table livraison
+INSERT INTO `site`.`livraison` (`id_cuisinier`, `id_commande`, `date_livraison`, `adresse_livraison`, `trajet`) VALUES
+('C2', 'COM3', '2025-02-01', '10 Rue Lafayette, 75009 Paris', 'Lyon > Paris'),
+('C3', 'COM4', '2025-02-02', '22 Avenue Foch, 75016 Paris', 'Marseille > Paris'),
+('C4', 'COM5', '2025-02-03', '8 Boulevard Haussmann, 75008 Paris', 'Lille > Paris');
+
+-- (3) insertion des données dans la table composé_de
+INSERT INTO `site`.`composé_de` (`nom_plat`, `id_commande`) VALUES
+('Tartiflette', 'COM3'),
+('Pâtes Carbonara', 'COM4'),
+('Couscous', 'COM5');
+
+-- (3) insertion des données dans la table poste
+INSERT INTO `site`.`poste` (`nom_plat`, `id_cuisinier`) VALUES
+('Tartiflette', 'C2'),
+('Pâtes Carbonara', 'C3'),
+('Couscous', 'C4');
