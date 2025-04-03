@@ -5,15 +5,14 @@ INSERT INTO `site`.`Client` (`id_client`, `nom`, `prenom`, `adresse`,`code_posta
 INSERT INTO `site`.`Cuisinier` (`id_cuisinier`, `nom`, `prenom`, `adresse`,`code_postal`,`ville`, `téléphone`,`mail`, `motdepasse`,`radié`) VALUES ('1', 'Dupond', 'Marie','30 Rue de la République', '75011','Paris', '1234567890', 'Mdupond@gmail.com','4321',False);
 
 -- (2) insertion des données dans la table Plat
-INSERT INTO `site`.`Plat` (`nom_plat`,`id_cuisinier`,`nb_personnes`, `type_plat`, `prix`, `date_fabrication`,`date_expiration`,`régime`,`origine`,`ingrédients`) VALUES ('Raclette','1','6','Plat','10','2025-01-10','2025-01-15',NULL,'Française','raclettefromage pommes_de_terre jambon cornichon');
-INSERT INTO `site`.`Plat` (`nom_plat`,`id_cuisinier`,`nb_personnes`, `type_plat`, `prix`, `date_fabrication`,`date_expiration`,`régime`,`origine`,`ingrédients`) VALUES ('Salade de fruit','1','6','Desser','5','2025-01-10','2025-01-15','Végétarien','Indifférent','kiwi sucre');
+INSERT INTO `site`.`Plat` (`nom_plat`,`id_cuisinier`,`nb_personnes`, `type_plat`, `prix`, `date_fabrication`,`date_expiration`,`régime`,`origine`) VALUES ('Raclette','1','6','Plat','10','2025-01-10','2025-01-15',NULL,'Française');
+INSERT INTO `site`.`Plat` (`nom_plat`,`id_cuisinier`,`nb_personnes`, `type_plat`, `prix`, `date_fabrication`,`date_expiration`,`régime`,`origine`) VALUES ('Salade de fruit','1','6','Desser','5','2025-01-10','2025-01-15','Végétarien','Indifférent');
 
--- (2) insertion des données dans la table Historique
-INSERT INTO `site`.`Historique` (`id_historique`, `historique_commande`, `historique_livraison`) 
-VALUES ('1', 'Commande 1', 'Livraison 1'),
-       ('2', 'Commande 2', 'Livraison 2');
-       
+-- (2) insertion des données dans la table Ligne_de_commande
+INSERT INTO `site`.`Ligne_de_commande` (`iDcommande`, `adresse_livraison`, `dateC`) VALUES ('1', '15 Rue de Paris, 75017 Paris', '2025-01-05');
+INSERT INTO `site`.`Ligne_de_commande` (`iDcommande`, `adresse_livraison`, `dateC`) VALUES ('2', '15 Rue de Paris, 75017 Paris', '2025-01-06');
+
 -- (2) insertion des données dans la table Commandes
-INSERT INTO `site`.`Commandes` (`id_commande`,`id_clients`,`nom_plat`, `prix`, `date_commande`, `id_historique`) VALUES ('1', '1', 'Raclette','10',NULL,'1');
-INSERT INTO `site`.`Commandes` (`id_commande`,`id_clients`,`nom_plat`, `prix`, `date_commande`, `id_historique`) VALUES ('2', '1', 'Salade de fruit','5',NULL,'2');
+INSERT INTO `site`.`Commandes` (`id_commande`,`id_client`,`nom_plat`, `prix`, `date_commande`, `id_client_1`,`iDcommande`) VALUES ('1', '1', 'Raclette','10',NULL,'1','1');
+INSERT INTO `site`.`Commandes` (`id_commande`,`id_client`,`nom_plat`, `prix`, `date_commande`, `id_client_1`,`iDcommande`) VALUES ('2', '1', 'Salade de fruit','5',NULL,'1','2');
 
