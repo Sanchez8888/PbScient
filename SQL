@@ -2,79 +2,79 @@ DROP DATABASE IF EXISTS site;
 CREATE DATABASE site;
 USE site;
 
-DROP TABLE IF EXISTS Cuisinier;
-CREATE TABLE IF NOT EXISTS Cuisinier(
-	id_cuisinier VARCHAR(50) PRIMARY KEY,
-    nom VARCHAR(50),
-    prenom VARCHAR(50),
-    adresse VARCHAR(50),
-    code_postal VARCHAR(5),
-    ville VARCHAR(50),
-    téléphone INTEGER,
-    mail VARCHAR(50),
-    motdepasse VARCHAR(50),
-    radié BOOL
-);
-DROP TABLE IF EXISTS Plat;
-CREATE TABLE IF NOT EXISTS Plat(
-	nom_plat VARCHAR(50) PRIMARY KEY,
-    id_cuisinier VARCHAR(50),
-    nb_personnes INTEGER,
-    type_plat VARCHAR(50),
-    prix DOUBLE,
-    date_fabrication DATE,
-    date_expiration DATE,
-    régime VARCHAR(50),
-    origine VARCHAR(50),
-    ingrédients TEXT
-);
 DROP TABLE IF EXISTS Client;
 CREATE TABLE IF NOT EXISTS Client(
-	id_client VARCHAR(50) PRIMARY KEY,
-    nom VARCHAR(50),
-    prenom VARCHAR(50),
-    adresse VARCHAR(50),
-    code_postal VARCHAR(5),
-    ville VARCHAR(50),
-    téléphone VARCHAR(10),
-    mail VARCHAR(100),
-    motdepasse VARCHAR(50),
-    radié BOOL
-);
-DROP TABLE IF EXISTS Historique;
-CREATE TABLE IF NOT EXISTS Historique(
-	id_historique VARCHAR(50) PRIMARY KEY,
-    historique_commande VARCHAR(50),
-    historique_livraison VARCHAR(50)
-);    
-DROP TABLE IF EXISTS Commandes;
-CREATE TABLE IF NOT EXISTS Commandes(
-	id_commande VARCHAR(50) PRIMARY KEY,
-    id_clients VARCHAR(50),
-    nom_plat VARCHAR(50),
-    prix DOUBLE,
-    date_commande VARCHAR(50),
-    id_historique VARCHAR(50) NOT NULL,
-    UNIQUE(id_historique),
-    FOREIGN KEY(id_historique) REFERENCES HISTORIQUE(id_historique)
+   id_client VARCHAR(50),
+   nom VARCHAR(50),
+   prenom VARCHAR(50),
+   adresse VARCHAR(50),
+   code_postal INT,
+   ville VARCHAR(50),
+   téléphone VARCHAR(50),
+   mail VARCHAR(50) NOT NULL,
+   motdepasse VARCHAR(50),
+   radié BOOL,
+   PRIMARY KEY(id_client)
 );
 
-DROP TABLE IF EXISTS Livraisons;
-CREATE TABLE IF NOT EXISTS Livraisons(
-	id_livraison VARCHAR(50) PRIMARY KEY,
-    date_livraison DATE,
-    adresse_livraison VARCHAR(50),
-    trajet VARCHAR(50),
-    distance DOUBLE,
-    temps INTEGER,
-    id_client VARCHAR(50) NOT NULL,
-    id_commande VARCHAR(50) NOT NULL,
-    id_historique VARCHAR(50) NOT NULL,
-    UNIQUE(id_historique),
-    FOREIGN KEY(id_client) REFERENCES CLIENT(id_client),
-    FOREIGN KEY(id_commande) REFERENCES COMMANDES(id_commande),
-    FOREIGN KEY(id_historique) REFERENCES HISTORIQUE(id_historique)
+DROP TABLE IF EXISTS Plat;
+CREATE TABLE IF NOT EXISTS Plat(
+   nom_plat VARCHAR(50),
+   id_cuisinier VARCHAR(50),
+   nb_personnes INT,
+   type_plat VARCHAR(50),
+   prix DOUBLE,
+   date_fabrication VARCHAR(50),
+   date_expiration VARCHAR(50),
+   régime VARCHAR(50),
+   origine VARCHAR(50),
+   PRIMARY KEY(nom_plat)
 );
+
+DROP TABLE IF EXISTS Cuisinier;
+CREATE TABLE IF NOT EXISTS Cuisinier(
+   id_cuisinier VARCHAR(50),
+   nom VARCHAR(50),
+   prenom VARCHAR(50),
+   adresse VARCHAR(50),
+   code_postal INT,
+   ville VARCHAR(50),
+   téléphone INT,
+   mail VARCHAR(50),
+   motdepasse VARCHAR(50),
+   radié BOOL,
+   PRIMARY KEY(id_cuisinier)
+);
+
+DROP TABLE IF EXISTS ingrédient;
+CREATE TABLE IF NOT EXISTS ingrédient(
+   nom VARCHAR(50),
+   volume REAL,
+   PRIMARY KEY(nom)
+);
+
+DROP TABLE IF EXISTS Ligne_de_commande;
+CREATE TABLE IF NOT EXISTS Ligne_de_commande(
+   iDcommande VARCHAR(50),
+   adresse_livraison VARCHAR(50),
+   dateC DATE,
+   PRIMARY KEY(iDcommande)
+);
+
+DROP TABLE IF EXISTS Commandes;
+CREATE TABLE IF NOT EXISTS Commandes(
+   id_commande VARCHAR(50),
+   id_client VARCHAR(50),
+   nom_plat VARCHAR(50),
+   prix VARCHAR(50),
+   date_commande VARCHAR(50),
+   id_client_1 VARCHAR(50) NOT NULL,
+   iDcommande VARCHAR(50) NOT NULL,
+   PRIMARY KEY(id_commande),
+   FOREIGN KEY(id_client_1) REFERENCES Client(id_client),
+   FOREIGN KEY(iDcommande) REFERENCES Ligne_de_commande(iDcommande)
+);
+
 DROP TABLE IF EXISTS prépare;
 CREATE TABLE IF NOT EXISTS prépare(
    nom_plat VARCHAR(50),
@@ -83,39 +83,56 @@ CREATE TABLE IF NOT EXISTS prépare(
    FOREIGN KEY(nom_plat) REFERENCES Plat(nom_plat),
    FOREIGN KEY(id_cuisinier) REFERENCES Cuisinier(id_cuisinier)
 );
-DROP TABLE IF EXISTS passe;
-CREATE TABLE IF NOT EXISTS passe(
-   id_client VARCHAR(50),
-   id_commande VARCHAR(50),
-   PRIMARY KEY(id_client, id_commande),
-   FOREIGN KEY(id_client) REFERENCES Client(id_client),
-   FOREIGN KEY(id_commande) REFERENCES Commandes(id_commande)
-);
-DROP TABLE IF EXISTS comporte;
-CREATE TABLE IF NOT EXISTS comporte(
-   nom_plat VARCHAR(50),
-   id_commande VARCHAR(50),
-   PRIMARY KEY(nom_plat, id_commande),
-   FOREIGN KEY(nom_plat) REFERENCES Plat(nom_plat),
-   FOREIGN KEY(id_commande) REFERENCES Commandes(id_commande)
-);
+
 DROP TABLE IF EXISTS note;
 CREATE TABLE IF NOT EXISTS note(
    id_client VARCHAR(50),
    id_cuisinier VARCHAR(50),
+   commente VARCHAR(50),
+   date_d_échange DATE,
    PRIMARY KEY(id_client, id_cuisinier),
    FOREIGN KEY(id_client) REFERENCES Client(id_client),
    FOREIGN KEY(id_cuisinier) REFERENCES Cuisinier(id_cuisinier)
 );
-DROP TABLE IF EXISTS informe_de_la_demande;
-CREATE TABLE IF NOT EXISTS informe_de_la_demande(
-   id_cuisinier VARCHAR(50),
-   id_commande VARCHAR(50),
-   PRIMARY KEY(id_cuisinier, id_commande),
-   FOREIGN KEY(id_cuisinier) REFERENCES Cuisinier(id_cuisinier),
-   FOREIGN KEY(id_commande) REFERENCES Commandes(id_commande)
+
+DROP TABLE IF EXISTS inclus;
+CREATE TABLE IF NOT EXISTS inclus(
+   nom_plat VARCHAR(50),
+   nom VARCHAR(50),
+   PRIMARY KEY(nom_plat, nom),
+   FOREIGN KEY(nom_plat) REFERENCES Plat(nom_plat),
+   FOREIGN KEY(nom) REFERENCES ingrédient(nom)
 );
 
+DROP TABLE IF EXISTS livraison;
+CREATE TABLE IF NOT EXISTS livraison(
+   id_cuisinier VARCHAR(50),
+   iDcommande VARCHAR(50),
+   date_livraison VARCHAR(50),
+   adresse_livraison VARCHAR(50),
+   trajet VARCHAR(50),
+   PRIMARY KEY(id_cuisinier, iDcommande),
+   FOREIGN KEY(id_cuisinier) REFERENCES Cuisinier(id_cuisinier),
+   FOREIGN KEY(iDcommande) REFERENCES Ligne_de_commande(iDcommande)
+);
+
+DROP TABLE IF EXISTS composé_de;
+CREATE TABLE IF NOT EXISTS composé_de(
+   nom_plat VARCHAR(50),
+   iDcommande VARCHAR(50),
+   PRIMARY KEY(nom_plat, iDcommande),
+   FOREIGN KEY(nom_plat) REFERENCES Plat(nom_plat),
+   FOREIGN KEY(iDcommande) REFERENCES Ligne_de_commande(iDcommande)
+);
+
+DROP TABLE IF EXISTS poste;
+CREATE TABLE IF NOT EXISTS poste(
+   nom_plat VARCHAR(50),
+   id_cuisinier VARCHAR(50),
+   PRIMARY KEY(nom_plat, id_cuisinier),
+   FOREIGN KEY(nom_plat) REFERENCES Plat(nom_plat),
+   FOREIGN KEY(id_cuisinier) REFERENCES Cuisinier(id_cuisinier)
+);
 SHOW TABLES;
 
 SELECT * FROM CLIENT;
@@ -124,4 +141,3 @@ SELECT nom
 FROM Client
 WHERE Trim(ville) = 'Paris';
 
-    
