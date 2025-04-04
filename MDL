@@ -1,0 +1,15 @@
+Client = (id_client VARCHAR(50)&, nom VARCHAR(50), prenom VARCHAR(50), adresse VARCHAR(50), code_postal INT, ville VARCHAR(50), téléphone VARCHAR(50), mail VARCHAR(50), motdepasse VARCHAR(50), radié LOGICAL);
+Plat = (nom_plat VARCHAR(50)&, id_cuisinier VARCHAR(50), nb_personnes INT, type_plat VARCHAR(50), prix DOUBLE, date_fabrication VARCHAR(50), date_expiration_ VARCHAR(50), régime VARCHAR(50), origine VARCHAR(50));
+Cuisinier = (id_cuisinier VARCHAR(50)&, nom VARCHAR(50), prenom VARCHAR(50), adresse VARCHAR(50), code_postal INT, ville VARCHAR(50), téléphone INT, mail VARCHAR(50), motdepasse VARCHAR(50), radié LOGICAL);
+ingrédient = (nomIng VARCHAR(50)&, volume REAL);
+Ligne_de_commande = (id_commande VARCHAR(50)&, adresse_livraison VARCHAR(50), dateC DATE);
+Commandes = (id_commande VARCHAR(50)&, id_client VARCHAR(50), nom_plat VARCHAR(50), prix VARCHAR(50), date_commande VARCHAR(50), #id_client_1, #id_commande_1);
+prépare = (#nom_plat&, #id_cuisinier&);
+note = (#id_client&, #id_cuisinier&, commente VARCHAR(50), date_d_échange DATE);
+inclus = (#nom_plat&, #nomIng&);
+livraison = (#id_cuisinier&, #id_commande&, date_livraison VARCHAR(50), adresse_livraison VARCHAR(50), trajet VARCHAR(50));
+composé_de = (#nom_plat&, #id_commande&);
+poste = (#nom_plat&, #id_cuisinier&);
+
+
+(j'ai ajouté un & pour les clé primaires car on ne peut pas souligner sur GITHUB)
