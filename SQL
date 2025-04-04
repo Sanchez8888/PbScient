@@ -1,3 +1,4 @@
+
 DROP DATABASE IF EXISTS site;
 CREATE DATABASE site;
 USE site;
@@ -193,3 +194,29 @@ ORDER BY nombre_de_clients DESC;
 SELECT Client.nom, Client.prenom
 FROM Client
 JOIN Cuisinier ON Client.id_client = Cuisinier.id_cuisinier;
+
+SELECT id_client, AVG(prix) AS moyenne_commandes
+FROM Commandes
+GROUP BY id_client;
+
+SELECT c.nom, c.prenom, COUNT(l.id_commande) AS nombre_livraisons
+FROM Cuisinier c
+JOIN livraison l ON c.id_cuisinier = l.id_cuisinier
+GROUP BY c.id_cuisinier;
+
+SELECT *
+FROM Commandes
+WHERE date_commande BETWEEN '2025-02-01' AND '2025-02-02';
+
+SELECT AVG(prix) AS moyenne_prix
+FROM Commandes;
+
+SELECT AVG(radié = 0) AS moyenne_comptes_actifs
+FROM Client;
+
+SELECT c.id_commande, c.id_client, p.nom_plat, c.prix, c.date_commande
+FROM Commandes c
+JOIN Plat p ON c.nom_plat = p.nom_plat
+WHERE p.origine = 'Italienne'
+  AND c.date_commande BETWEEN '2025-02-01' AND '2025-02-02'
+  AND c.id_client = '3';
