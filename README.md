@@ -16,3 +16,5 @@ Password=Mrick88rick!
 SslMode=None;
 
 2-Solution C#
+
+On a comparé les trois algorithmes : Dijkstra, Bellman-Ford, et Floyd-Warshall. On a trouvé que Dijkstra était le meilleur dans ce cas, car il est beaucoup plus rapide et efficace quand il n'y a pas de poids négatifs, comme c'est le cas ici. En plus, on a modifié Dijkstra pour qu'il affiche aussi le chemin parcouru, ce qui est très utile dans les applications pratiques. Tandis que Bellman-Ford est plus lent et qu'on n'a pas besoin de gérer des poids négatifs, Floyd-Warshall est plus adapté pour des graphes très grands avec de nombreux sommets, mais il est aussi moins performant que Dijkstra pour notre cas précis. On a donc modifié Dijkstra pour afficher les chemins parcouru. 
