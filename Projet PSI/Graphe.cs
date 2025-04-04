@@ -8,295 +8,292 @@ using System.Windows.Forms;
 namespace ProjetPSI
 {
     public class Graphe
+{
+    public List<string> Stations;
+    public Dictionary<int, List<string>> DictionnaireStations;
+    public Dictionary<string, List<int>> DictionnaireCorrespondances;
+    public Dictionary<int, List<Lien>> DictionnaireLiens;
+    public List<Noeud> Noeuds;
+    public double[,] MatriceAdj;
+    /// <summary>
+    /// Constructeur Naturel
+    /// </summary>
+    public Graphe()
     {
-        public Dictionary<int, List<Lien>> adjacence;
-        private string type;
-        private int nbsommets;
-        private double[,] matriceAdjacence;
-
-        /// <summary>
-        /// Constructeur Naturel
-        /// </summary>
-        /// <param name="fichier">Chemin du fichier</param>
-        /// <param name="type">Type du graphe.</param>
-        public Graphe(string fichier, string type)
-        {
-            this.type = type;
-            adjacence = new Dictionary<int, List<Lien>>();
-            string[] lignes = File.ReadAllLines(fichier);
-
-            if (type == "liste")
-            {
-                foreach (string ligne in lignes)
-                {
-                    string ligne1 = ligne.Replace("(", "").Replace(")", "").Replace("\t", " ").Replace(",", " ");
-                    string[] ligne2 = ligne1.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    if (ligne2.Length >= 2 && int.TryParse(ligne2[0], out int id1) && int.TryParse(ligne2[1], out int id2))
-                    {
-                        double poids = 1;
-                        if (ligne2.Length > 2 && double.TryParse(ligne2[2], out double Poids))
-                        {
-                            poids = Poids;
-                        }
-                        AjouterNoeud(id1);
-                        AjouterNoeud(id2);
-                        AjouterLien(id1, id2, poids);
-                    }
-                }
-                this.nbsommets = adjacence.Count;
-            }
-            else if (type == "matrice")
-            {
-                this.nbsommets = lignes.Length;
-                matriceAdjacence = new double[nbsommets, nbsommets];
-
-                for (int i = 0; i < nbsommets; i++)
-                {
-                    string[] valeurs = lignes[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    for (int j = 0; j < nbsommets; j++)
-                    {
-                        if (double.TryParse(valeurs[j], out double poids))
-                        {
-                            matriceAdjacence[i, j] = poids;
-                        }
-                        else
-                        {
-                            matriceAdjacence[i, j] = 0;
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Ajoute un nœud.
-        /// </summary>
-        /// <param name="id">ID du Noeud</param>
-
-        public void AjouterNoeud(int id)
-        {
-            if (!adjacence.ContainsKey(id))
-            {
-                adjacence[id] = new List<Lien>();
-            }
-        }
-
-        /// <summary>
-        /// Ajoute un lien
-        /// </summary>
-        /// <param name="id1">Premier noeud</param>
-        /// <param name="id2">Deuxième noeud</param>
-        /// <param name="poids">Poids de l'arête</param>
-        public void AjouterLien(int id1, int id2, double poids = 1)
-        {
-            if (!adjacence.ContainsKey(id1) || !adjacence.ContainsKey(id2)) return;
-
-            Lien lien = new Lien(id1, id2, poids);
-            adjacence[id1].Add(lien);
-            adjacence[id2].Add(lien);
-        }
-        /// <summary>
-        /// Parcours en largeur
-        /// </summary>
-        /// <param name="depart">Sommet de départ</param>
-        public void ParcoursLargeur(int depart)
-        {
-            if (!adjacence.ContainsKey(depart)) return;
-
-            List<int> file = new List<int>();
-            List<int> visites = new List<int>();
-    
-            file.Add(depart);
-            visites.Add(depart);
-        
-            while (file.Count > 0)
-            {
-                int noeud = file[0];
-                file.RemoveAt(0);
-                Console.Write(noeud + " ");
-        
-                foreach (Lien lien in adjacence[noeud])
-                {
-                    int voisin = (lien.Noeud1 == noeud) ? lien.Noeud2 : lien.Noeud1;
-                    if (!visites.Contains(voisin))
-                    {
-                        visites.Add(voisin);
-                        file.Add(voisin);
-                    }
-                }
-            }
-            Console.WriteLine();
-        }
-        
-        /// <summary>
-        /// Parcours en profondeur
-        /// </summary>
-        /// <param name="depart">Sommet de départ</param>
-        public void ParcoursProfondeur(int depart)
-        {
-            if (!adjacence.ContainsKey(depart)) return;
-        
-            List<int> visites = new List<int>();
-            ParcoursProfondeurRecursive(depart, visites);
-            Console.WriteLine();
-        }
-        
-        private void ParcoursProfondeurRecursive(int noeud, List<int> visites)
-        {
-            if (visites.Contains(noeud)) return;
-        
-            visites.Add(noeud);
-            Console.Write(noeud + " ");
-        
-            foreach (Lien lien in adjacence[noeud])
-            {
-                int voisin = (lien.Noeud1 == noeud) ? lien.Noeud2 : lien.Noeud1;
-                ParcoursProfondeurRecursive(voisin, visites);
-            }
-        }
-        /// <summary>
-        /// Vérifie si le graphe contient un cycle
-        /// </summary>
-        public bool ContientCycle()
-        {
-            List<int> visites = new List<int>();
-            List<int> pile = new List<int>();
-
-            foreach (int noeud in adjacence.Keys)
-            {
-                if (!visites.Contains(noeud))
-                {
-                    pile.Add(noeud);
-                    while (pile.Count > 0)
-                    {
-                        int courant = pile[pile.Count - 1];
-                        pile.RemoveAt(pile.Count - 1);
-
-                        if (!visites.Contains(courant))
-                        {
-                            visites.Add(courant);
-                            foreach (Lien lien in adjacence[courant])
-                            {
-                                int voisin = (lien.Noeud1 == courant) ? lien.Noeud2 : lien.Noeud1;
-                                if (visites.Contains(voisin)) return true;
-                                pile.Add(voisin);
-                            }
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-        /// <summary>
-        /// Vérifie si le graphe est connexe
-        /// </summary>
-        public bool EstConnexe()
-        {
-            if (adjacence.Count == 0) return false;
-
-            List<int> file = new List<int>();
-            List<int> visites = new List<int>();
-
-            int premierNoeud = adjacence.Keys.First();
-            file.Add(premierNoeud);
-            visites.Add(premierNoeud);
-
-            while (file.Count > 0)
-            {
-                int noeud = file[0];
-                file.RemoveAt(0);
-
-                foreach (Lien lien in adjacence[noeud])
-                {
-                    int voisin = (lien.Noeud1 == noeud) ? lien.Noeud2 : lien.Noeud1;
-                    if (!visites.Contains(voisin))
-                    {
-                        visites.Add(voisin);
-                        file.Add(voisin);
-                    }
-                }
-            }
-
-            return visites.Count == adjacence.Count;
-        }
+        DictionnaireStations = new Dictionary<int, List<string>>();
     }
 
     /// <summary>
-    /// Classe permettant la visualisation graphique d'un graphe.
+    /// Cree le dictionnaire avec la deuxieme page du excel.
     /// </summary>
-    public class GrapheVisualizer : Form
+    /// <param name="s">Chemin fichier</param>
+    /// <returns></returns>
+    Dictionary<int, List<string>> CreerDictionnaire(string s)
     {
-        private Graphe graphe;
-        private Dictionary<int, Point> positions;
 
-        public GrapheVisualizer(Graphe graphe)
+        ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+
+        var dict = new Dictionary<int, List<string>>();
+
+        FileInfo fichier = new FileInfo(s);
+        using (ExcelPackage package = new ExcelPackage(fichier))
         {
-            this.graphe = graphe;
-            this.positions = new Dictionary<int, Point>();
+            ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+            int lignes = worksheet.Dimension.Rows;
+            int colonnes = worksheet.Dimension.Columns;
 
-            this.Text = "Visualisation du Graphe";
-            this.Size = new Size(800, 600);
-            this.Paint += new PaintEventHandler(DessinerGraphe);
-
-            CalculerPositionsCirculaires();
-        }
-
-        private void CalculerPositionsCirculaires()
-        {
-            int rayon = 200;
-            int centreX = this.ClientSize.Width / 2;
-            int centreY = this.ClientSize.Height / 2;
-            int n = graphe.adjacence.Count;
-            double angleStep = 2 * Math.PI / n;
-
-            int i = 0;
-            foreach (var noeud in graphe.adjacence.Keys)
+            for (int i = 2; i <= lignes; i++)
             {
-                int x = (int)(centreX + rayon * Math.Cos(i * angleStep));
-                int y = (int)(centreY + rayon * Math.Sin(i * angleStep));
-                positions[noeud] = new Point(x, y);
-                i++;
+                int stationId = int.Parse(worksheet.Cells[i, 1].Text);
+                var stationData = new List<string>();
+
+                for (int j = 2; j <= colonnes; j++)
+                {
+                    stationData.Add(worksheet.Cells[i, j].Text);
+                }
+
+                dict[stationId] = stationData;
             }
         }
 
-        private void DessinerGraphe(object sender, PaintEventArgs e)
-        {
-            Graphics g = e.Graphics;
-            g.Clear(Color.White);
-            Font font = new Font("Arial", 12, FontStyle.Bold);
-            Brush brush = Brushes.Black;
-            Pen edgePen = new Pen(Color.Black, 2);
-            Brush nodeBrush = Brushes.Blue;
-            int nodeSize = 30;
+        return dict;
+    }
 
-            foreach (var noeud in graphe.adjacence)
+    public List<Noeud> CreerListeNoeud(Dictionary<int, List<string>> dic)
+    {
+        List<Noeud> ListeNoeuds = new List<Noeud>();
+
+        foreach (var n in dic)
+        {
+            Noeud noeud = new Noeud(n.Key);
+            ListeNoeuds.Add(noeud);
+        }
+
+        return ListeNoeuds;
+    }
+
+    public double[,] CreerMatrice(List<Noeud> l)
+    {
+        int taille = l[l.Count - 1].Id + l[0].Id;
+        double[,] matrice = new double[taille, taille];
+
+        for (int i = 0; i < taille; i++)
+        {
+            for (int j = 0; j < taille; j++)
             {
-                Point p1 = positions[noeud.Key];
-                foreach (var lien in noeud.Value)
+                if (i != j)
+                    matrice[i, j] = 100000;
+                else
+                    matrice[i, j] = 0;
+            }
+        }
+
+        return matrice;
+    }
+
+
+
+    public List<string> CreerListeStations(Dictionary<int, List<string>> dic)
+    {
+        List<string> StationsUniques = new List<string>();
+
+        foreach (var liste in dic.Values)
+        {
+            string station = liste[0];
+            if (!StationsUniques.Contains(station)) 
+            {
+                 StationsUniques.Add(station);
+            }
+        }
+
+        return StationsUniques;
+    }
+
+    public Dictionary<int, List<Lien>> CreerDictionnaireLiens(Dictionary<int, List<string>> dic)
+    {
+        Dictionary<int, List<Lien>> dicLiens = new Dictionary<int, List<Lien>>();
+        foreach (var e in dic)
+        {
+            int idActuel = e.Key;
+            List<string> liste = e.Value;
+            string terme0 = liste[0];
+            string terme1 = liste[1];
+            string terme2 = liste[2];
+            string terme4 = liste[4];
+
+            if (double.TryParse(liste[3], out double poids))
+            {
+                if (!string.IsNullOrEmpty(terme1) && int.TryParse(terme1, out int idNoeud1))
                 {
-                    int voisin = (lien.Noeud1 == noeud.Key) ? lien.Noeud2 : lien.Noeud1;
-                    if (positions.ContainsKey(voisin))
+                    if (!dicLiens.ContainsKey(idActuel))
                     {
-                        Point p2 = positions[voisin];
-                        g.DrawLine(edgePen, p1, p2);
+                        dicLiens[idActuel] = new List<Lien>();
                     }
+                    dicLiens[idActuel].Add(new Lien(Noeuds[idActuel-1], Noeuds[idNoeud1-1], poids));
+                }
+                if (!string.IsNullOrEmpty(terme2) && int.TryParse(terme2, out int idNoeud2))
+                {
+                    if (!dicLiens.ContainsKey(idActuel))
+                    {
+                        dicLiens[idActuel] = new List<Lien>();
+                    }
+                    dicLiens[idActuel].Add(new Lien(Noeuds[idActuel - 1], Noeuds[idNoeud2 - 1], poids));
+                }
+                if (!string.IsNullOrEmpty(terme4) && int.TryParse(terme4, out int poidsCor))
+                {
+                    List<int> Cor = DictionnaireCorrespondances[terme0];
+                    foreach (int i in Cor)
+                    {
+                        if (!dicLiens.ContainsKey(idActuel))
+                        {
+                            dicLiens[idActuel] = new List<Lien>();
+                        }
+                        if(idActuel != i)
+                        {
+                            dicLiens[idActuel].Add(new Lien(Noeuds[idActuel - 1], Noeuds[i-1], poidsCor));
+                        }
+                    }
+                    
                 }
             }
 
-            foreach (var noeud in positions)
+
+
+        }
+        return dicLiens;
+
+    }
+
+    public static Dictionary<string, List<int>> CreerDicCorrespondance(Dictionary<int, List<string>> dic)
+    {
+        Dictionary<string, List<int>> dicCor = new Dictionary<string, List<int>>();
+        foreach (var e in dic)
+        {
+            List<string> liste = e.Value;
+
+            if (liste[4] != "")
             {
-                Point p = noeud.Value;
-                g.FillEllipse(nodeBrush, p.X - nodeSize / 2, p.Y - nodeSize / 2, nodeSize, nodeSize);
-                SizeF textSize = g.MeasureString(noeud.Key.ToString(), font);
-                g.DrawString(noeud.Key.ToString(), font, brush, p.X - textSize.Width / 2, p.Y - textSize.Height / 2);
+                string nomStation = liste[0];
+
+                
+                if (dicCor.ContainsKey(nomStation))
+                {
+                    dicCor[nomStation].Add(e.Key);
+                }
+                else
+                {
+                    dicCor[nomStation] = new List<int> { e.Key };
+                }
+            }
+        }
+        return dicCor;
+    }
+
+    public void RemplirMatrice(double[,] mat, Dictionary<int, List<Lien>> dicLien)
+    {
+        foreach (var e in dicLien)
+        {
+            int id = e.Key;
+            List<Lien> liens = e.Value;
+
+            foreach (Lien lien in liens)
+            {
+                int i = lien.Noeud1.Id;
+                int j = lien.Noeud2.Id;
+                double poids = lien.Poids;
+
+                mat[i, j] = poids; 
+            }
+        }
+    }
+
+    public void InstancierGraphe(string s)
+    {
+        this.DictionnaireStations = CreerDictionnaire(s);
+        this.Stations = CreerListeStations(DictionnaireStations);
+        this.Noeuds = CreerListeNoeud(DictionnaireStations);
+        this.DictionnaireCorrespondances = CreerDicCorrespondance(DictionnaireStations);
+        this.MatriceAdj = CreerMatrice(Noeuds);
+        this.DictionnaireLiens = CreerDictionnaireLiens(DictionnaireStations);
+        RemplirMatrice(MatriceAdj, DictionnaireLiens);
+
+
+
+    }
+
+    public void AfficherDictionnaire()
+    {
+        Console.WriteLine("Test");
+        foreach (var kvp in DictionnaireStations)
+        {
+            Console.WriteLine($"ID: {kvp.Key}, Data: {string.Join(", ", kvp.Value)}");
+        }
+    
+    }
+    public void AfficherDictionnaireC()
+    {
+        Console.WriteLine("Test");
+        foreach (var kvp in DictionnaireCorrespondances)
+        {
+            Console.WriteLine($"ID: {kvp.Key}, Data: {string.Join(", ", kvp.Value)}");
+        }
+
+    }
+    public void AfficherDictionnaireL()
+    {
+        foreach (var kvp in DictionnaireLiens)
+        {
+            int ID = kvp.Key;
+            List<Lien> liens = kvp.Value;
+
+            Console.WriteLine($"ID: {ID}");  // Affiche l'information du noeud (en supposant que ToString() est redéfini dans la classe Noeud)
+
+            foreach (var lien in liens)
+            {
+                Console.WriteLine($"  Lien entre {lien.Noeud1.Id} et {lien.Noeud2.Id}, Poids: {lien.Poids}");
             }
         }
 
-        public static void AfficherGraphe(Graphe graphe)
+    }
+    public void AfficherListeS()
+    {
+        foreach (string element in Stations)
         {
-            Application.EnableVisualStyles();
-            Application.Run(new GrapheVisualizer(graphe));
+            Console.WriteLine(element);
         }
     }
+    public void AfficherListeN()
+    {
+        foreach (Noeud element in Noeuds)
+        {
+            Console.WriteLine(element.Id);
+        }
+    }
+    public void AfficherMatrice()
+    {
+        double[,] matrice = MatriceAdj;
+        int taille = 321;
+
+        Console.Write("     "); // Espace pour les en-têtes
+        for (int i = 312; i < taille; i++)
+        {
+            Console.Write($"{i,6}");
+        }
+        Console.WriteLine("\n");
+
+        for (int i =312; i < taille; i++)
+        {
+            Console.Write($"{i,4} "); // En-tête de ligne
+
+            for (int j = 312; j < taille; j++)
+            {
+                if (matrice[i, j] == 100000)
+                    Console.Write("  INF ");
+                else
+                    Console.Write($"{matrice[i, j],6}");
+            }
+            Console.WriteLine();
+        }
+    }
+}
 }
