@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS Cuisinier(
    adresse VARCHAR(50),
    code_postal INT,
    ville VARCHAR(50),
-   téléphone INT,
+   téléphone VARCHAR(50),
    mail VARCHAR(50),
    motdepasse VARCHAR(50),
    radié BOOL,
