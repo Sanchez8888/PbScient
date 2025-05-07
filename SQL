@@ -132,94 +132,6 @@ CREATE TABLE IF NOT EXISTS poste(
    FOREIGN KEY(nom_plat) REFERENCES Plat(nom_plat),
    FOREIGN KEY(id_cuisinier) REFERENCES Cuisinier(id_cuisinier)
 );
-SHOW TABLES;
-
-SELECT * FROM CLIENT;
-
-SELECT nom
-FROM Client
-WHERE Trim(ville) = 'Paris';
-
-SELECT * FROM prépare;
-
-SELECT * FROM Client WHERE radié = FALSE;
-
-SELECT * FROM Cuisinier WHERE ville = 'Paris';
-
-SELECT * FROM Plat WHERE type_plat = 'Dessert';
-
-SELECT * FROM Commandes WHERE date_commande > '2025-02-01';
-
-SELECT * FROM Plat WHERE id_cuisinier = '3';
-
-SELECT Client.nom, Client.prenom, Commandes.nom_plat
-FROM Client
-JOIN Commandes ON Client.id_client = Commandes.id_client;
-
-SELECT Client.nom, Client.prenom, Commandes.nom_plat, Ligne_de_commande.adresse_livraison
-FROM Commandes
-JOIN Client ON Commandes.id_client = Client.id_client
-JOIN Ligne_de_commande ON Commandes.id_commande = Ligne_de_commande.id_commande;
-
-SELECT DISTINCT Cuisinier.nom, Cuisinier.prenom
-FROM Cuisinier
-JOIN prépare ON Cuisinier.id_cuisinier = prépare.id_cuisinier
-JOIN Commandes ON Commandes.nom_plat = prépare.nom_plat;
-
-SELECT Plat.nom_plat, ingrédient.nomIng
-FROM inclus
-JOIN Plat ON inclus.nom_plat = Plat.nom_plat
-JOIN ingrédient ON inclus.nomIng = ingrédient.nomIng;
-
-SELECT Client.nom AS client, Cuisinier.nom AS cuisinier, note.commente, note.date_d_échange
-FROM note
-JOIN Client ON note.id_client = Client.id_client
-JOIN Cuisinier ON note.id_cuisinier = Cuisinier.id_cuisinier;
-
-SELECT id_client, SUM(prix) AS total_dépensé
-FROM Commandes
-GROUP BY id_client;
-
-SELECT AVG(prix) AS prix_moyen FROM Plat;
-
-SELECT id_cuisinier, COUNT(nom_plat) AS nombre_de_plats
-FROM prépare
-GROUP BY id_cuisinier;
-
-SELECT ville, COUNT(*) AS nombre_de_clients
-FROM Client
-GROUP BY ville
-ORDER BY nombre_de_clients DESC;
-
-SELECT Client.nom, Client.prenom
-FROM Client
-JOIN Cuisinier ON Client.id_client = Cuisinier.id_cuisinier;
-
-SELECT id_client, AVG(prix) AS moyenne_commandes
-FROM Commandes
-GROUP BY id_client;
-
-SELECT c.nom, c.prenom, COUNT(l.id_commande) AS nombre_livraisons
-FROM Cuisinier c
-JOIN livraison l ON c.id_cuisinier = l.id_cuisinier
-GROUP BY c.id_cuisinier;
-
-SELECT *
-FROM Commandes
-WHERE date_commande BETWEEN '2025-02-01' AND '2025-02-02';
-
-SELECT AVG(prix) AS moyenne_prix
-FROM Commandes;
-
-SELECT AVG(radié = 0) AS moyenne_comptes_actifs
-FROM Client;
-
-SELECT c.id_commande, c.id_client, p.nom_plat, c.prix, c.date_commande
-FROM Commandes c
-JOIN Plat p ON c.nom_plat = p.nom_plat
-WHERE p.origine = 'Italienne'
-  AND c.date_commande BETWEEN '2025-02-01' AND '2025-02-02'
-  AND c.id_client = '3';
 
 
 
@@ -326,6 +238,41 @@ CREATE TABLE IF NOT EXISTS Livraison (
    PRIMARY KEY(id_livraison),
    FOREIGN KEY(id_cuisinier) REFERENCES Cuisinier(id_cuisinier),
    FOREIGN KEY(id_commande) REFERENCES Commandes(id_commande)
+);
+CREATE TABLE Ligne_de_commande(
+   id_commande VARCHAR(50),
+   adresse_livraison VARCHAR(50),
+   dateC DATE,
+   PRIMARY KEY(id_commande)
+);
+CREATE TABLE prépare(
+   id_plat INT,
+   id_cuisinier INT,
+   PRIMARY KEY(id_plat, id_cuisinier),
+   FOREIGN KEY(id_plat) REFERENCES Plat(id_plat),
+   FOREIGN KEY(id_cuisinier) REFERENCES Cuisinier(id_cuisinier)
+);
+CREATE TABLE inclus(
+   id_plat INT,
+   id_ingredient INT,
+   PRIMARY KEY(id_plat, id_ingredient),
+   FOREIGN KEY(id_plat) REFERENCES Plat(id_plat),
+   FOREIGN KEY(id_ingredient) REFERENCES ingrédient(id_ingredient)
+);
+
+CREATE TABLE composé_de(
+   id_plat INT,
+   id_commande VARCHAR(50),
+   PRIMARY KEY(id_plat, id_commande),
+   FOREIGN KEY(id_plat) REFERENCES Plat(id_plat),
+   FOREIGN KEY(id_commande) REFERENCES Ligne_de_commande(id_commande)
+);
+CREATE TABLE poste(
+   id_plat INT,
+   id_cuisinier INT,
+   PRIMARY KEY(id_plat, id_cuisinier),
+   FOREIGN KEY(id_plat) REFERENCES Plat(id_plat),
+   FOREIGN KEY(id_cuisinier) REFERENCES Cuisinier(id_cuisinier)
 );
 
 SHOW TABLES;
