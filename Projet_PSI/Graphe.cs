@@ -70,6 +70,7 @@ namespace Projet_PSI
 
             return dict;
         }
+
         /// <summary>
         /// Cree le dictionnaire avec la premiere page du excel.
         /// </summary>
@@ -413,7 +414,8 @@ namespace Projet_PSI
         }
 
         /// <summary>
-        /// Algorithme floyd marshall
+        /// Algorithme floyd w
+        /// arshall
         /// </summary>
         /// <param name="mat">Matrice D'adjacence</param>
         /// <returns></returns>
@@ -458,7 +460,6 @@ namespace Projet_PSI
 
             return distance;
         }
-
         /// <summary>
         /// Calcule la distance entre 2 longitude/latitude
         /// </summary>
@@ -469,22 +470,23 @@ namespace Projet_PSI
         /// <returns></returns>
         public double CalculerDistance(double lon1, double lat1, double lon2, double lat2)
         {
-            lat1 = lat1 * (Math.PI / 180);
-            lon1 = lon1 * (Math.PI / 180);
-            lat2 = lat2 * (Math.PI / 180);
-            lon2 = lon2 * (Math.PI / 180);
+            // Conversion des degrés en radians
+            double radLat1 = lat1 * (Math.PI / 180);
+            double radLon1 = lon1 * (Math.PI / 180);
+            double radLat2 = lat2 * (Math.PI / 180);
+            double radLon2 = lon2 * (Math.PI / 180);
 
-            double dLat = lat2 - lat1;
-            double dLon = lon2 - lon1;
+            double dLat = radLat2 - radLat1;
+            double dLon = radLon2 - radLon1;
 
-            double a = Math.Pow(Math.Sin(dLat / 2), 2) + Math.Cos(lat1) * Math.Cos(lat2) * Math.Pow(Math.Sin(dLon / 2), 2);
+            double a = Math.Pow(Math.Sin(dLat / 2), 2) + Math.Cos(radLat1) * Math.Cos(radLat2) * Math.Pow(Math.Sin(dLon / 2), 2);
             double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
 
-            return 6371000 * c;
+            return 6371000 * c; // Distance en mètres
         }
 
         /// <summary>
-        /// Trouve la station la plus prohe par rapport a une longitude/latitude
+        /// Trouve la station la plus proche par rapport a une longitude/latitude
         /// </summary>
         /// <param name="valeursLongLat"></param>
         /// <param name="lon"></param>
@@ -502,12 +504,11 @@ namespace Projet_PSI
 
                 if (valeurs.Count >= 2)
                 {
-                    double lonStat = valeurs[0];  
-                    double latStat = valeurs[1];  
+                    double lonStat = valeurs[0];
+                    double latStat = valeurs[1];
 
                     double distance = CalculerDistance(lon, lat, lonStat, latStat);
 
-                    
                     if (distance < distanceMin)
                     {
                         distanceMin = distance;
@@ -518,6 +519,7 @@ namespace Projet_PSI
 
             return stationProche;
         }
+
 
         /// <summary>
         /// Instancie le graphe par rapport a un fichier excel
@@ -534,91 +536,133 @@ namespace Projet_PSI
             this.DictionnaireLiens = CreerDictionnaireLiens(DictionnaireStations);
             this.ValeursLongLat = ExtraireLongLat(DictionnaireLongLat);
             RemplirMatrice(MatriceAdj, DictionnaireLiens);
+        }
 
 
+        public List<string> SelectStation()
+        {
+            List<string> selectedStation = new List<string>();
 
+            Form selectionForm = new Form
+            {
+                Text = "Sélectionnez une station par ligne",
+                Size = new System.Drawing.Size(1200, 700),
+                StartPosition = FormStartPosition.CenterScreen,
+                AutoScroll = true
+            };
+
+            var lignes = new Dictionary<string, List<(int id, string nom)>>();
+
+            foreach (var kvp in DictionnaireLongLat)
+            {
+                int id = kvp.Key;
+                List<string> data = kvp.Value;
+
+                if (data.Count >= 2)
+                {
+                    string ligne = data[0];
+                    string nomStation = data[1];
+
+                    if (!lignes.ContainsKey(ligne))
+                        lignes[ligne] = new List<(int, string)>();
+
+                    lignes[ligne].Add((id, nomStation));
+                }
+            }
+
+            int xOffset = 10;
+
+            foreach (var kvp in lignes.OrderBy(kvp => int.TryParse(kvp.Key, out int num) ? num : int.MaxValue))
+            {
+                string ligne = kvp.Key;
+                var stations = kvp.Value.OrderBy(s => s.id).ToList();
+
+                Label label = new Label
+                {
+                    Text = "Ligne " + ligne,
+                    Location = new System.Drawing.Point(xOffset, 10),
+                    AutoSize = true,
+                    Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Bold)
+                };
+                selectionForm.Controls.Add(label);
+
+                int yOffset = 40;
+                foreach (var (id, nom) in stations)
+                {
+                    Button btn = new Button
+                    {
+                        Text = $"{nom} [{id}]",
+                        Tag = (id, nom),
+                        Location = new System.Drawing.Point(xOffset, yOffset),
+                        Width = 150,
+                        Height = 30
+                    };
+
+                    btn.Click += (s, e) =>
+                    {
+                        var (stationId, stationName) = ((int, string))((Button)s).Tag;
+                        selectedStation = new List<string> { stationId.ToString(), stationName };
+                        selectionForm.Close();
+                    };
+
+                    selectionForm.Controls.Add(btn);
+                    yOffset += 35;
+                }
+
+                xOffset += 160;
+            }
+
+            selectionForm.ShowDialog();
+            return selectedStation;
         }
 
         /// <summary>
-        /// Ouvre l'interface
+        /// Trouve un trajet entre deux stations avec les noms et les changements de ligne
         /// </summary>
-        public void OuvrirFenetre()
+        /// <param name="idStat1">ID de la station de départ</param>
+        /// <param name="idStat2">ID de la station d'arrivée</param>
+        /// <returns>Liste d'étapes du trajet</returns>
+        public List<string> TrouverTrajet(int idStat1, int idStat2)
         {
-            Form form = new Form
+            List<string> trajet = new List<string>();
+
+            var (distances, chemins) = Djikstra(MatriceAdj, idStat1);
+
+            if (idStat2 - 1 >= chemins.Count || idStat2 - 1 < 0)
+                return new List<string> { "Erreur : station d'arrivée invalide." };
+
+            List<int> chemin = chemins[idStat2 - 1];
+
+            if (chemin.Count == 0)
+                return new List<string> { "Aucun chemin trouvé." };
+
+            string lignePrecedente = "";
+
+            foreach (int id in chemin)
             {
-                Text = "Calcul Trajet",
-                Size = new System.Drawing.Size(500, 550),
-                StartPosition = FormStartPosition.CenterScreen
-            };
+                if (!DictionnaireLongLat.TryGetValue(id, out var info) || info.Count < 1)
+                    continue;
 
-            Label labelLongitude1 = new Label { Text = "Longitude 1", Location = new System.Drawing.Point(30, 30), AutoSize = true };
-            TextBox textLongitude1 = new TextBox { Location = new System.Drawing.Point(150, 30), Width = 150 };
+                string ligneActuelle = info[0];
+                string nomStation = Stations[id - 1];
 
-            Label labelLatitude1 = new Label { Text = "Latitude 1", Location = new System.Drawing.Point(30, 70), AutoSize = true };
-            TextBox textLatitude1 = new TextBox { Location = new System.Drawing.Point(150, 70), Width = 150 };
-
-            Label labelLongitude2 = new Label { Text = "Longitude 2", Location = new System.Drawing.Point(30, 110), AutoSize = true };
-            TextBox textLongitude2 = new TextBox { Location = new System.Drawing.Point(150, 110), Width = 150 };
-
-            Label labelLatitude2 = new Label { Text = "Latitude 2", Location = new System.Drawing.Point(30, 150), AutoSize = true };
-            TextBox textLatitude2 = new TextBox { Location = new System.Drawing.Point(150, 150), Width = 150 };
-
-            form.Controls.Add(labelLongitude1);
-            form.Controls.Add(textLongitude1);
-            form.Controls.Add(labelLatitude1);
-            form.Controls.Add(textLatitude1);
-            form.Controls.Add(labelLongitude2);
-            form.Controls.Add(textLongitude2);
-            form.Controls.Add(labelLatitude2);
-            form.Controls.Add(textLatitude2);
-
-
-            Button buttonCalculer = new Button
-            {
-                Text = "Calculer trajet",
-                Location = new System.Drawing.Point(150, 200),
-                AutoSize = true
-            };
-            form.Controls.Add(buttonCalculer);
-
-
-            buttonCalculer.Click += (sender, e) =>
-            {
-
-                double lon1, lat1, lon2, lat2;
-                bool okLon1 = double.TryParse(textLongitude1.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out lon1);
-                bool okLat1 = double.TryParse(textLatitude1.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out lat1);
-                bool okLon2 = double.TryParse(textLongitude2.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out lon2);
-                bool okLat2 = double.TryParse(textLatitude2.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out lat2);
-
-                if (okLon1 && okLat1 && okLon2 && okLat2)
+                if (lignePrecedente != "" && ligneActuelle != lignePrecedente)
                 {
-
-                    int station1 = TrouverStationProche(ValeursLongLat, lat1, lon1);
-                    int station2 = TrouverStationProche(ValeursLongLat, lat2, lon2);
-
-                    var (distances, chemins) = Djikstra(MatriceAdj, station1);
-
-                    int distanceStation2 = distances[station2];
-
-                    List<int> cheminStation2 = chemins[station2 - 1];
-
-                    MessageBox.Show(
-                        $"Station 1 : {Stations[station1-1]}\n" +
-                        $"Station 2 : {Stations[station2-1]}\n\n" +
-                        $"Distance (minutes) : {distanceStation2}\n" +
-                        $"Chemin : {string.Join(" → ", cheminStation2.Select(i => Stations[i-1]))}",
-                        "Résultat Trajet"
-                    );
+                    trajet.Add($"Changement de ligne {lignePrecedente} à {ligneActuelle}");
                 }
-                else
-                {
-                    MessageBox.Show("Erreur lors de la conversion des valeurs. Vérifiez vos entrées.", "Erreur");
-                }
-            };
 
-            form.ShowDialog();
+                trajet.Add(nomStation);
+                lignePrecedente = ligneActuelle;
+            }
+
+            return trajet;
         }
+
+
+
+
+
+
 
     }
 
