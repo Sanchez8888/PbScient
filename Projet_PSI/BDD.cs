@@ -15,8 +15,12 @@ namespace Projet_PSI
             this.nom = nom;
         }
 
-
-
+        /// <summary>
+        /// Récupère les données d'un client ou d'un cuisinier à partir de la base de données.
+        /// </summary>
+        /// <param name="IdClient">L'ID du client pour lequel récupérer les données. Utilisez 0 si l'ID du cuisinier est fourni.</param>
+        /// <param name="IdCuisinier">L'ID du cuisinier pour lequel récupérer les données. Utilisez 0 si l'ID du client est fourni.</param>
+        /// <returns>Une liste de chaînes contenant les données du client ou du cuisinier, y compris le nom, prénom, adresse, etc.</returns>
         public List<string> GetData(int IdClient, int IdCuisinier)
         {
             List<string> result = new List<string>();
@@ -59,7 +63,11 @@ namespace Projet_PSI
             return result;
         }
 
-
+        /// <summary>
+        /// Vérifie si l'adresse e-mail existe déjà dans la base de données, que ce soit pour un client ou un cuisinier.
+        /// </summary>
+        /// <param name="email">L'adresse e-mail à vérifier dans la base de données.</param>
+        /// <returns>Retourne true si l'adresse e-mail existe dans la table Client ou Cuisinier, sinon false.</returns>
         public bool CheckMail(string email)
         {
             string connectionString = $"server=localhost;port=3306;user id=root;password=root;database={this.nom};";
@@ -92,7 +100,12 @@ namespace Projet_PSI
                 return false;
             }
         }
-
+        /// <summary>
+        /// Vérifie si le mot de passe fourni correspond à celui enregistré dans la base de données pour un client donné.
+        /// </summary>
+        /// <param name="email">L'adresse e-mail du client à vérifier.</param>
+        /// <param name="password">Le mot de passe fourni par le client.</param>
+        /// <returns>Retourne l'identifiant du client (id_Client) si l'e-mail et le mot de passe correspondent ou retourne 0 si aucun client correspondant n'est trouvé ou si le mot de passe ne correspond pas.</returns>
         public int CheckPassClient(string email, string password)
         {
             string connectionString = $"server=localhost;port=3306;user id=root;password=root;database={this.nom};";
@@ -127,7 +140,12 @@ namespace Projet_PSI
                 return 0;
             }
         }
-
+        /// <summary>
+        /// Vérifie si le mot de passe fourni correspond à celui enregistré dans la base de données pour un cuisinier donné.
+        /// </summary>
+        /// <param name="email">L'adresse e-mail du cuisinier à vérifier.</param>
+        /// <param name="password">Le mot de passe fourni par le cuisinier.</param>
+        /// <returns>Retourne l'identifiant du cuisinier (id_Cuisinier) si l'e-mail et le mot de passe correspondent ou retourne 0 si aucun cuisinier correspondant n'est trouvé ou si le mot de passe ne correspond pas.</returns>
         public int CheckPassCuisinier(string email, string password)
         {
             string connectionString = $"server=localhost;port=3306;user id=root;password=root;database={this.nom};";
@@ -162,8 +180,21 @@ namespace Projet_PSI
                 return 0;
             }
         }
-
-
+        /// <summary>
+        /// Ajoute un nouveau client à la base de données avec les informations fournies.
+        /// </summary>
+        /// <param name="nom">Nom du client.</param>
+        /// <param name="prenom">Prénom du client.</param>
+        /// <param name="adresse">Adresse postale du client.</param>
+        /// <param name="codePostal">Code postal du client.</param>
+        /// <param name="ville">Ville du client.</param>
+        /// <param name="telephone">Numéro de téléphone du client.</param>
+        /// <param name="mail">Adresse e-mail du client.</param>
+        /// <param name="motDePasse">Mot de passe du client.</param>
+        /// <param name="radie">Indique si le client est radié (true) ou non (false).</param>
+        /// <param name="idMetro">Identifiant de la station de métro associée.</param>
+        /// <param name="nomMetro">Nom de la station de métro associée.</param>
+        /// <returns>Retourne true si l'insertion a été effectuée avec succès (au moins une ligne insérée), sinon false.</returns>
         public bool AjouterClient(string nom, string prenom, string adresse, int codePostal, string ville, string telephone, string mail, string motDePasse, bool radie, int idMetro, string nomMetro)
         {
             string connectionString = $"server=localhost;port=3306;user id=root;password=root;database={this.nom};";
@@ -201,7 +232,21 @@ namespace Projet_PSI
             }
         }
 
-
+        /// <summary>
+        /// Ajoute un nouveau cuisinier à la base de données avec les informations fournies.
+        /// </summary>
+        /// <param name="nom">Nom du cuisinier.</param>
+        /// <param name="prenom">Prénom du cuisinier.</param>
+        /// <param name="adresse">Adresse postale du cuisinier.</param>
+        /// <param name="codePostal">Code postal du cuisinier.</param>
+        /// <param name="ville">Ville du cuisinier.</param>
+        /// <param name="telephone">Numéro de téléphone du cuisinier.</param>
+        /// <param name="mail">Adresse e-mail du cuisinier.</param>
+        /// <param name="motDePasse">Mot de passe du cuisinier.</param>
+        /// <param name="radie">Indique si le cuisinier est radié (true) ou non (false).</param>
+        /// <param name="idMetro">Identifiant de la station de métro associée.</param>
+        /// <param name="nomMetro">Nom de la station de métro associée.</param>
+        /// <returns>Retourne true si l'insertion a réussi (au moins une ligne insérée), sinon false.</returns>
         public bool AjouterCuisinier(string nom, string prenom, string adresse, int codePostal, string ville, string telephone, string mail, string motDePasse, bool radie, int idMetro, string nomMetro)
         {
             string connectionString = $"server=localhost;port=3306;user id=root;password=root;database={this.nom};";
@@ -240,7 +285,12 @@ namespace Projet_PSI
         }
 
 
-       
+       /// <summary>
+        /// Modifie la quantité (nombre de personnes) associée à un plat dans la base de données.
+        /// </summary>
+        /// <param name="idPlat">L'identifiant du plat dont la quantité doit être modifiée.</param>
+        /// <param name="nouvelleQuantite">La nouvelle quantité (nombre de personnes) à associer au plat.</param>
+        /// <returns>Retourne true si la mise à jour a réussi (au moins une ligne modifiée), sinon false.</returns>
         public bool ModifierQuantitePlat(int idPlat, int nouvelleQuantite)
         {
             Console.Write("essai modification");
@@ -270,7 +320,15 @@ namespace Projet_PSI
                 return false;
             }
         }
-
+        /// <summary>
+        /// Ajoute une nouvelle commande dans la base de données.
+        /// </summary>
+        /// <param name="idClient">Identifiant du client ayant passé la commande.</param>
+        /// <param name="idPlat">Identifiant du plat commandé.</param>
+        /// <param name="idCuisinier">Identifiant du cuisinier responsable de la commande.</param>
+        /// <param name="prix">Prix total de la commande.</param>
+        /// <param name="dateCommande">Date de la commande au format chaîne de caractères (par exemple, "2025-05-07").</param>
+        /// <returns>Retourne true si l'insertion a réussi (au moins une ligne ajoutée), sinon false.</returns>
         public bool AjouterCommande(int idClient, int idPlat, int idCuisinier, double prix, string dateCommande)
         {
             string connectionString = $"server=localhost;port=3306;user id=root;password=root;database={this.nom};";
@@ -303,7 +361,14 @@ namespace Projet_PSI
         }
 
 
-
+        /// <summary>
+        /// Ajoute un commentaire (note) d’un client pour un cuisinier dans la base de données.
+        /// </summary>
+        /// <param name="idClient">Identifiant du client auteur du commentaire.</param>
+        /// <param name="idCuisinier">Identifiant du cuisinier concerné par le commentaire.</param>
+        /// <param name="commentaire">Texte du commentaire déposé par le client.</param>
+        /// <param name="dateEchange">Date de l’échange ou de l’interaction entre le client et le cuisinier.</param>
+        /// <returns>Retourne true si l’ajout du commentaire a réussi (au moins une ligne insérée), sinon false.</returns>
         public bool AjouterNote(int idClient, int idCuisinier, string commentaire, DateTime dateEchange)
         {
             string connectionString = $"server=localhost;port=3306;user id=root;password=root;database={this.nom};";
@@ -332,7 +397,15 @@ namespace Projet_PSI
                 return false;
             }
         }
-
+        /// <summary>
+        /// Ajoute une nouvelle livraison dans la base de données.
+        /// </summary>
+        /// <param name="idCuisinier">Identifiant du cuisinier en charge de la livraison.</param>
+        /// <param name="idCommande">Identifiant de la commande livrée.</param>
+        /// <param name="dateLivraison">Date de la livraison, au format "yyyy-MM-dd".</param>
+        /// <param name="adresseLivraison">Adresse à laquelle la commande doit être livrée.</param>
+        /// <param name="trajet">Description ou données relatives au trajet effectué.</param>
+        /// <returns>Retourne true si l’insertion de la livraison a réussi (au moins une ligne insérée), sinon false.</returns>
         public bool AjouterLivraison(int idCuisinier, int idCommande, string dateLivraison, string adresseLivraison, string trajet)
         {
             string connectionString = $"server=localhost;port=3306;user id=root;password=root;database={this.nom};";
@@ -362,7 +435,10 @@ namespace Projet_PSI
                 return false;
             }
         }
-
+        /// <summary>
+        /// Récupère les données de tous les plats enregistrés dans la base de données.
+        /// </summary>
+        /// <returns>Une liste de listes de chaînes représentant les lignes de la table Plat.</returns>
         public List<List<string>> GetDataPlats()
         {
             List<List<string>> result = new List<List<string>>();
@@ -398,7 +474,11 @@ namespace Projet_PSI
 
             return result;
         }
-
+        
+        /// <summary>
+        /// Récupère toutes les commandes enregistrées dans la base de données.
+        /// </summary>
+        /// <returns>Une liste de listes de chaînes représentant les lignes de la table Commandes.</returns>
         public List<List<string>> GetDataCommandes()
         {
             List<List<string>> result = new List<List<string>>();
@@ -434,6 +514,12 @@ namespace Projet_PSI
 
             return result;
         }
+
+        /// <summary>
+        /// Récupère les informations personnelles d'un cuisinier à partir de son identifiant.
+        /// </summary>
+        /// <param name="idCuisinier">L'identifiant du cuisinier.</param>
+        /// <returns>Une liste de chaînes contenant les informations suivantes : prénom, nom, adresse complète (adresse + code postal + ville) ou retourne null si le cuisinier n'est pas trouvé ou si une erreur survient.</returns>
         public List<string> GetCuisinierInfo(int idCuisinier)
         {
             List<string> result = new List<string>();
@@ -459,7 +545,12 @@ namespace Projet_PSI
             return result.Count == 3 ? result : null;
         }
 
-
+        /// <summary>
+        /// Récupère l'identifiant de la station de métro associée à un client ou un cuisinier.
+        /// </summary>
+        /// <param name="idClient">L'identifiant du client. Doit être différent de 0 si l'on souhaite chercher un client.</param>
+        /// <param name="idCuisinier">L'identifiant du cuisinier. Utilisé si <paramref name="idClient"/> est égal à 0.</param>
+        /// <returns>L'identifiant de la station de métro (idMetro) si trouvé ; -1 en cas d'erreur ou si aucun résultat n'est trouvé.</returns>
         public int GetMetroId(int idClient, int idCuisinier)
         {
             string connectionString = $"server=localhost;port=3306;user id=root;password=root;database={this.nom};";
@@ -491,6 +582,22 @@ namespace Projet_PSI
 
             return -1;
         }
+
+        /// <summary>
+        /// Met à jour les informations d'un client dans la base de données.
+        /// </summary>
+        /// <param name="idClient">L'identifiant du client à mettre à jour.</param>
+        /// <param name="nom">Le nom du client.</param>
+        /// <param name="prenom">Le prénom du client.</param>
+        /// <param name="adresse">L'adresse du client.</param>
+        /// <param name="codePostal">Le code postal de l'adresse du client.</param>
+        /// <param name="ville">La ville de l'adresse du client.</param>
+        /// <param name="telephone">Le numéro de téléphone du client.</param>
+        /// <param name="mail">L'adresse mail du client.</param>
+        /// <param name="motDePasse">Le mot de passe du client.</param>
+        /// <param name="idMetro">L'identifiant de la station de métro associée au client.</param>
+        /// <param name="nomMetro">Le nom de la station de métro associée au client.</param>
+        /// <returns>true si les informations ont été mises à jour avec succès, <c>false</c> en cas d'échec.</returns>
         public bool MettreAJourClient(int idClient, string nom, string prenom, string adresse, int codePostal, string ville, string telephone, string mail, string motDePasse, int idMetro, string nomMetro)
         {
             string connectionString = $"server=localhost;port=3306;user id=root;password=root;database={this.nom};";
@@ -537,6 +644,11 @@ namespace Projet_PSI
                 return false;
             }
         }
+        /// <summary>
+        /// Marque un client comme radié (supprimé) dans la base de données, sans supprimer ses données.
+        /// </summary>
+        /// <param name="idClient">L'identifiant du client à radier.</param>
+        /// <returns>true si le client a été radié avec succès, false en cas d'échec.</returns>
         public bool SupprimerClient(int idClient)
         {
             string connectionString = $"server=localhost;port=3306;user id=root;password=root;database={this.nom};";
@@ -560,7 +672,21 @@ namespace Projet_PSI
                 return false;
             }
         }
-
+        /// <summary>
+        /// Met à jour les informations d'un cuisinier dans la base de données.
+        /// </summary>
+        /// <param name="idCuisinier">L'identifiant du cuisinier à mettre à jour.</param>
+        /// <param name="nom">Le nom du cuisinier.</param>
+        /// <param name="prenom">Le prénom du cuisinier.</param>
+        /// <param name="adresse">L'adresse du cuisinier.</param>
+        /// <param name="codePostal">Le code postal du cuisinier.</param>
+        /// <param name="ville">La ville du cuisinier.</param>
+        /// <param name="telephone">Le numéro de téléphone du cuisinier.</param>
+        /// <param name="mail">L'adresse e-mail du cuisinier.</param>
+        /// <param name="motDePasse">Le mot de passe du cuisinier.</param>
+        /// <param name="idMetro">L'identifiant du métro du cuisinier.</param>
+        /// <param name="nomMetro">Le nom du métro du cuisinier.</param>
+        /// <returns>true si les informations du cuisinier ont été mises à jour avec succès, false en cas d'échec.</returns>
         public bool MettreAJourCuisinier(int idCuisinier, string nom, string prenom, string adresse, int codePostal, string ville, string telephone, string mail, string motDePasse, int idMetro, string nomMetro)
         {
             string connectionString = $"server=localhost;port=3306;user id=root;password=root;database={this.nom};";
