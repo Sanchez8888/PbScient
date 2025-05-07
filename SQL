@@ -220,3 +220,117 @@ JOIN Plat p ON c.nom_plat = p.nom_plat
 WHERE p.origine = 'Italienne'
   AND c.date_commande BETWEEN '2025-02-01' AND '2025-02-02'
   AND c.id_client = '3';
+
+
+
+
+
+
+
+
+
+
+////////////////
+
+
+
+
+DROP DATABASE IF EXISTS site;
+CREATE DATABASE site;
+USE site;
+
+CREATE TABLE IF NOT EXISTS Client (
+   id_client INT AUTO_INCREMENT,
+   nom VARCHAR(50),
+   prenom VARCHAR(50),
+   adresse VARCHAR(50),
+   code_postal INT,
+   ville VARCHAR(50),
+   telephone VARCHAR(50),
+   mail VARCHAR(50) NOT NULL,
+   motdepasse VARCHAR(50),
+   radie BOOL,
+   idMetro INT,
+   nomMetro VARCHAR(50),
+   PRIMARY KEY(id_client)
+);
+
+CREATE TABLE IF NOT EXISTS Cuisinier (
+   id_cuisinier INT AUTO_INCREMENT,
+   nom VARCHAR(50),
+   prenom VARCHAR(50),
+   adresse VARCHAR(50),
+   code_postal INT,
+   ville VARCHAR(50),
+   telephone VARCHAR(50),
+   mail VARCHAR(50),
+   motdepasse VARCHAR(50),
+   radie BOOL,
+   idMetro INT,
+   nomMetro VARCHAR(50),
+   PRIMARY KEY(id_cuisinier)
+);
+
+CREATE TABLE IF NOT EXISTS Ingrédient (
+   id_ingredient INT AUTO_INCREMENT,
+   nomIng VARCHAR(50),
+   volume REAL,
+   PRIMARY KEY(id_ingredient)
+);
+
+CREATE TABLE IF NOT EXISTS Plat (
+   id_plat INT AUTO_INCREMENT,
+   nom_plat VARCHAR(50),
+   id_cuisinier INT,
+   nb_personnes INT,
+   type_plat VARCHAR(50),
+   prix DOUBLE,
+   date_fabrication VARCHAR(50),
+   date_expiration VARCHAR(50),
+   regime VARCHAR(50),
+   origine VARCHAR(50),
+   PRIMARY KEY(id_plat),
+   FOREIGN KEY(id_cuisinier) REFERENCES Cuisinier(id_cuisinier)
+);
+
+CREATE TABLE IF NOT EXISTS Commandes (
+   id_commande INT AUTO_INCREMENT,
+   id_client INT,
+   id_plat INT,
+   id_cuisinier INT,
+   prix DOUBLE,
+   date_commande VARCHAR(50),
+   livre BOOL,
+   PRIMARY KEY(id_commande),
+   FOREIGN KEY(id_client) REFERENCES Client(id_client),
+   FOREIGN KEY(id_plat) REFERENCES Plat(id_plat)
+);
+
+CREATE TABLE IF NOT EXISTS Note (
+   id_client INT,
+   id_cuisinier INT,
+   commente VARCHAR(255),
+   date_d_echange DATE,
+   PRIMARY KEY(id_client, id_cuisinier),
+   FOREIGN KEY(id_client) REFERENCES Client(id_client),
+   FOREIGN KEY(id_cuisinier) REFERENCES Cuisinier(id_cuisinier)
+);
+
+CREATE TABLE IF NOT EXISTS Livraison (
+   id_livraison INT AUTO_INCREMENT,
+   id_cuisinier INT,
+   id_commande INT,
+   date_livraison VARCHAR(50),
+   adresse_livraison VARCHAR(50),
+   trajet VARCHAR(50),
+   PRIMARY KEY(id_livraison),
+   FOREIGN KEY(id_cuisinier) REFERENCES Cuisinier(id_cuisinier),
+   FOREIGN KEY(id_commande) REFERENCES Commandes(id_commande)
+);
+
+SHOW TABLES;
+select * from client;
+select * from cuisinier;
+select * from plat;
+select * from commandes;
+
