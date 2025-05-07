@@ -92,3 +92,38 @@ INSERT INTO `site`.`poste` (`nom_plat`, `id_cuisinier`) VALUES
 ('Tartiflette', 'C2'),
 ('Pâtes Carbonara', 'C3'),
 ('Couscous', 'C4');
+
+
+
+
+
+///////////
+USE site;
+
+-- Peuple la table Client avec idMetro et nomMetro
+INSERT INTO Client (nom, prenom, adresse, code_postal, ville, telephone, mail, motdepasse, radie, idMetro, nomMetro) VALUES
+('Durand', 'Medhy', '15', 75017, 'Paris', '1234567890', 'Mdurand@gmail.com', '1234', False, 101, 'Rome'),
+('Martin', 'Sophie', '12 Rue Lafayette', 75009, 'Paris', '0612345678', 'smartin@gmail.com', 'pass123', False, 102, 'Gare du Nord'),
+('Bernard', 'Luc', '22 Avenue Foch', 75016, 'Paris', '0623456789', 'lbernard@gmail.com', 'qwerty', False, 103, 'Charles de Gaulle – Étoile'),
+('Dubois', 'Emma', '8 Boulevard Haussmann', 75008, 'Paris', '0634567890', 'edubois@gmail.com', 'azerty', False, 104, 'Opéra'),
+('Thomas', 'Louis', '18 Rue Oberkampf', 75011, 'Paris', '0645678901', 'lthomas@gmail.com', 'password', True, 105, 'République'),
+('Robert', 'Alice', '24 Rue de la Paix', 75002, 'Paris', '0656789012', 'arobert@gmail.com', 'alice123', False, 106, 'Pyramides'),
+('Petit', 'Hugo', '36 Avenue des Champs', 75008, 'Paris', '0667890123', 'hpetit@gmail.com', 'hugo123', False, 107, 'George V'),
+('Richard', 'Camille', '48 Rue Saint-Denis', 75001, 'Paris', '0678901234', 'crichard@gmail.com', 'camillepass', False, 108, 'Châtelet'),
+('Durant', 'Paul', '72 Boulevard Voltaire', 75011, 'Paris', '0689012345', 'pdurant@gmail.com', 'paulpass', True, 109, 'Oberkampf'),
+('Lefevre', 'Manon', '10 Boulevard Saint-Michel', 75005, 'Paris', '0745678901', 'mlefevre@gmail.com', 'chefpass4', False, 110, 'Luxembourg');
+
+-- Peuple la table Cuisinier avec idMetro et nomMetro
+INSERT INTO Cuisinier (nom, prenom, adresse, code_postal, ville, telephone, mail, motdepasse, radie, idMetro, nomMetro) VALUES
+('Garcia', 'Pierre', '3 Rue de Lyon', 75012, 'Paris', '0712345678', 'pgarcia@gmail.com', 'chefpass1', False, 201, 'Gare de Lyon'),
+('Morel', 'Clara', '5 Avenue de la Gare', 75010, 'Paris', '0723456789', 'cmorel@gmail.com', 'chefpass2', False, 202, 'Magenta'),
+('Fournier', 'Antoine', '8 Rue Rivoli', 75004, 'Paris', '0734567890', 'afournier@gmail.com', 'chefpass3', False, 203, 'Hôtel de Ville'),
+('Lefevre', 'Manon', '10 Boulevard Saint-Michel', 75005, 'Paris', '0745678901', 'mlefevre@gmail.com', 'chefpass4', False, 204, 'Cluny – La Sorbonne');
+
+-- Peuple la table Plat
+INSERT INTO Plat (nom_plat, id_cuisinier, nb_personnes, type_plat, prix, date_fabrication, date_expiration, regime, origine) VALUES
+('Tartiflette', 2, 4, 'Plat', 12.5, '2025-02-01', '2025-02-07', NULL, 'Française'),
+('Pâtes Carbonara', 3, 2, 'Plat', 9.99, '2025-02-02', '2025-02-05', NULL, 'Italienne'),
+('Couscous', 4, 6, 'Plat', 15.0, '2025-02-03', '2025-02-08', NULL, 'Maghrébine'),
+('Soupe Miso', 1, 1, 'Entrée', 5.5, '2025-02-04', '2025-02-06', 'Végétarien', 'Japonaise'),
+('Tiramisu', 3, 4, 'Dessert', 6.5, '2025-02-05', '2025-02-10', NULL, 'Italienne');
